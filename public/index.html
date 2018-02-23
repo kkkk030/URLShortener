@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>URL Shortener</title>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  </head>
+  <body>
+    <br><br>
+
+    <form id="createUrl" role="form">
+      <input type="url" id="longUrl">
+      <button type="submit">Shorten !</button>
+    </form>
+
+    <form id="checkUrl" role="form">
+      <input type="url" id="cUrl">
+      <button type="submit">Count Check</button>
+    </form>
+
+
+
+    <h2><strong id="shortUrl"></strong></h2>
+    <h2><strong id="cheUrl"></strong></h2>
+
+
+    <script type="text/javascript">
+      var API_SERVER = 'http://localhost:3000';
+
+//---------------------------shorten !------------------------------
+      $( "#createUrl" ).submit(function( event ) {
+
+        event.preventDefault();
+
+        var longUrl = $('#longUrl').val();
+
+        $.ajax({
+          url: API_SERVER + '/url/' + encodeURIComponent(longUrl)
+          , crossDomain: true
+          , dataType: "json"
+          , type: 'GET'
+          , data: {}
+          , success: success
+          , error: function(jqXHR, textStatus, errorThrown){
+              alert(errorThrown);
+          }
+        });
+
+      });
+      var success = function(data){
+        $('#shortUrl').text(API_SERVER +'/' +data.key);
+      };
+
+//---------------------------count check!---------------------------
+      $( "#checkUrl" ).submit(function( event ) {
+        console.log('---222---')
+        event.preventDefault();
+
+        var cUrl = $('#cUrl').val();
+        console.log(cUrl);
+        $.ajax({
+          url: API_SERVER + '/check/' + encodeURIComponent(cUrl)
+          , crossDomain: true
+          , dataType: "json"
+          , type: 'GET'
+          , data: {}
+          , success: check_success
+          , error: function(jqXHR, textStatus, errorThrown){
+              alert(errorThrown);
+          }
+        });
+
+      });
+      var check_success = function(data){
+        console.log(data);
+        $('#cheUrl').text(data.count);
+      };
+
+    </script>
+  </body>
+ </html>
